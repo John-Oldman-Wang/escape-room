@@ -1,4 +1,4 @@
 *.json
-*.html
+# *.html
 *.css
 *.md

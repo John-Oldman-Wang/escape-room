@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamentals</title>
+    <link rel="stylesheet" href="../base.css">
+    <script src="../base.js" defer></script>
+</head>
+<body>
+    <template shadowroot="open">
+        <style>
+            .canvas-wrap {
+                flex: 1;
+                overflow: hidden;
+            }
+            .canvas-wrap slot[name="canvas"] {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+        <div>
+            学习文档地址：<slot name="link"></slot>
+        </div>
+        <div class="canvas-wrap">
+            <slot name="canvas"></slot>
+        </div>
+    </template>
+    <!-- <div is="d-div"></div> -->
+    <a slot="link" target="_blank" href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html">webgl 基础概念</a>
+    <canvas slot="canvas"></canvas>
+    <script id="vertex-shader-2d" type="notjs">
+ 
+        // 一个属性变量，将会从缓冲中获取数据
+        attribute vec4 a_position;
+       
+        // 所有着色器都有一个main方法
+        void main() {
+       
+          // gl_Position 是一个顶点着色器主要设置的变量
+          gl_Position = a_position;
+        }
+       
+    </script>
+       
+    <script id="fragment-shader-2d" type="notjs">
+       
+        // 片断着色器没有默认精度，所以我们需要设置一个精度
+        // mediump是一个不错的默认值，代表“medium precision”（中等精度）
+        precision mediump float;
+       
+        void main() {
+          // gl_FragColor是一个片断着色器主要设置的变量
+          gl_FragColor = vec4(1, 0, 0.5, 1); // 返回“瑞迪施紫色”
+        }
+       
+      </script>
+    <script defer>
+        const canvas = document.querySelector('canvas')
+        const gl = canvas.getContext('webgl')
+        // gl.createShader
+        console.log(gl)
+        // gl.drawArrays
+        class C {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.gl = canvas.getContext('webgl');
+            }
+
+            createShader(type, source) {
+                console.log({
+                    type, source
+                })
+                // 创建
+                var shader = this.gl.createShader(type);
+                console.log(shader)
+                // 设置 source
+                gl.shaderSource(shader, source);
+                // 编译 shader
+                gl.compileShader(shader);
+                var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+                console.log({success})
+                return shader;
+
+                // console.log(gl.getShaderInfoLog(shader));
+                // gl.deleteShader(shader);
+            }
+            createProgram(vertexShader, fragmentShader) {
+                console.log({
+                    vertexShader, fragmentShader
+                })
+                const program = this.gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                var success = gl.getProgramParameter(program, gl.LINK_STATUS);
+                if (success) {
+                    return program;
+                }
+
+                console.log(gl.getProgramInfoLog(program));
+                gl.deleteProgram(program);
+            }
+        }
+
+        const c = new C(canvas);
+        var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
+        console.log(vertexShaderSource)
+        const shader = c.createShader(gl.VERTEX_SHADER, vertexShaderSource)
+        console.log(shader)
+        var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
+        var fragmentShader = c.createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+        console.log(fragmentShader)
+    </script>
+</body>
+</html>

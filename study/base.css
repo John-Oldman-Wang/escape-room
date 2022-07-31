@@ -1,0 +1,32 @@
+html,body {
+    margin: 0px;
+    padding: 0px;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+html * {
+    box-sizing: inherit;
+}
+
+html {
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
